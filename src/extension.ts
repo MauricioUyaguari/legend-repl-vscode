@@ -17,7 +17,7 @@
 import * as path from 'path';
 import {
   Uri,
-  workspace,
+
   type ExtensionContext,
   window,
   commands,
@@ -27,20 +27,15 @@ import {
   type ProviderResult,
   TerminalLink,
 } from 'vscode';
-import type {
-  LegendLanguageClient } from './LegendLanguageClient';
 
-let client: LegendLanguageClient;
+const REPL_NAME = 'Legend REPL';
 
 export function activate(context: ExtensionContext): void {
   createReplTerminal(context);
 }
 
-export function deactivate(): Thenable<void> | undefined {
-  if (!client) {
-    return undefined;
-  }
-  return client.stop();
+export function deactivate(): void {
+  console.log('lets exist');
 }
 
 class LegendTerminalLink extends TerminalLink {
@@ -52,8 +47,6 @@ class LegendTerminalLink extends TerminalLink {
   }
 }
 
-const REPL_NAME = 'Legend REPL';
-
 export function createReplTerminal(context: ExtensionContext): void {
   const provider = window.registerTerminalProfileProvider(
     'legend.terminal.repl',
@@ -61,33 +54,21 @@ export function createReplTerminal(context: ExtensionContext): void {
       provideTerminalProfile(
         token: CancellationToken,
       ): ProviderResult<TerminalProfile> {
-        return client.replClasspath(token).then((cp) => ({
+        return ({
           options: {
             name: REPL_NAME,
             shellPath: 'java',
             shellArgs: [
-              `-DstoragePath=${path.join(context.storageUri!.fsPath, 'repl')}`,
-              `-Dlegend.repl.grid.licenseKey=${workspace
-                .getConfiguration('legend')
-                .get('agGridLicense', '')}`,
-              // '-agentlib:jdwp=transport=dt_socket,server=y,quiet=y,suspend=n,address=*:11292',
-              'org.finos.legend.engine.ide.lsp.server.LegendREPLTerminal',
-            ],
-            env: {
-              CLASSPATH: cp,
-            },
-            message: `REPL log file: ${Uri.file(
-              path.join(
-                context.storageUri!.fsPath,
-                'repl',
-                'engine-lsp',
-                'log.txt',
+              '-jar',
+              context.asAbsolutePath(
+                path.join('server', 'legend-repl-beta-2.jar'),
               ),
-            )}`,
-            iconPath: new ThemeIcon('compass'),
+            ],
+            message: 'Welcome to Legend REPL Cube. This is the stand alone REPL extension for vs code.',
+            iconPath: new ThemeIcon('repl'),
             isTransient: true,
           },
-        }));
+        });
       },
     },
   );

@@ -19,10 +19,6 @@ const webpack = require('webpack');
 
 module.exports = {
   entry: {
-    AgGridRenderer: './src/components/grid/AgGridRenderer.tsx',
-    FunctionResultsEditorRenderer: './src/components/function/FunctionResultsEditorRenderer.tsx',
-    DiagramRendererRoot: './src/components/diagram/DiagramRendererRoot.tsx',
-    // Add more entry points as needed
   },
   externals: {
     vscode: 'commonjs vscode',
