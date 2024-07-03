@@ -1,0 +1,32 @@
+# OS
+.DS_STORE
+*.swp
+*~
+[Dd]esktop.ini
+Thumbs.db
+
+# IDE
+.idea
+**/*.iml
+/target/
+**/jsconfig.json
+.settings
+.project
+.classpath
+
+# Build
+npm-debug.log
+npm-debug.log*
+/build/
+/lib
+
+# Dependencies
+**/node_modules
+
+# Development
+/temp
+*.vsix
+/server/*.jar
+
+# Test
+/.vscode-test/
